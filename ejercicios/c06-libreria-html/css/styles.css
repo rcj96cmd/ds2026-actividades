@@ -1,0 +1,11 @@
+.mi-nav {
+    background-color: #1a1a1a;
+}
+
+.mi-nav .nav-link, .mi-nav .navbar-brand {
+    color: #ffffff !important;
+}
+
+.mi-nav .nav-link:hover {
+    color: #ffc107 !important;
+}
