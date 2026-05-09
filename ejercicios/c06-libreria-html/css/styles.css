@@ -9,3 +9,28 @@
 .mi-nav .nav-link:hover {
     color: #ffc107 !important;
 }
+
+/* Hero */
+.hero {
+    background-image: url('../img/libreria.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+}
+
+.hero-overlay {
+    background-color: rgba(0, 0, 0, 0.55);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-titulo {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.hero-subtitulo {
+    font-size: 1.3rem;
+}
