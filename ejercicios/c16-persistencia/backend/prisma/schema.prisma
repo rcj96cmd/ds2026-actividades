@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Libro {
+  id          Int    @id @default(autoincrement())
+  titulo      String
+  autor       String // por ahora texto, la relación viene en C17
+  descripcion String
+  precio      String
+  portada     String
+}
+
+model Autor {
+  id           Int    @id @default(autoincrement())
+  nombre       String @unique
+  nacionalidad String
+  bio          String
+}
