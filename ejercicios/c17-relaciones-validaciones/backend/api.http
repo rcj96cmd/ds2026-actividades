@@ -1,0 +1,133 @@
+@baseUrl = http://localhost:3000
+
+### === LIBROS ===
+
+### Listar libros
+GET {{baseUrl}}/api/libros
+
+### Ver un libro
+GET {{baseUrl}}/api/libros/1
+
+### Ver un libro que no existe → 404
+GET {{baseUrl}}/api/libros/999
+
+### Crear un libro
+POST {{baseUrl}}/api/libros
+Content-Type: application/json
+
+{
+  "titulo": "Ficciones",
+  "autorId": 2,
+  "descripcion": "Otra colección clave de cuentos de Borges.",
+  "precio": 3800,
+  "portada": "https://covers.openlibrary.org/b/id/8236191-M.jpg"
+}
+
+### Editar un libro
+PUT {{baseUrl}}/api/libros/1
+Content-Type: application/json
+
+{
+  "titulo": "Cien años de soledad (edición actualizada)",
+  "autorId": 2,
+  "descripcion": "Nueva descripción editada.",
+  "precio": 4900,
+  "portada": "https://covers.openlibrary.org/b/id/15219095-M.jpg"
+}
+
+### Editar un libro que no existe → 404
+PUT {{baseUrl}}/api/libros/999
+Content-Type: application/json
+
+{
+  "titulo": "No existe",
+  "autorId": 999,
+  "descripcion": "-",
+  "precio": 1,
+  "portada": "-"
+}
+
+### Borrar un libro
+DELETE {{baseUrl}}/api/libros/2
+
+### Borrar un libro que no existe → 404
+DELETE {{baseUrl}}/api/libros/999
+
+### === AUTORES ===
+
+### Listar autores
+GET {{baseUrl}}/api/autores
+
+### Ver un autor
+GET {{baseUrl}}/api/autores/1
+
+### Ver un autor que no existe → 404
+GET {{baseUrl}}/api/autores/999
+
+### Crear un autor
+POST {{baseUrl}}/api/autores
+Content-Type: application/json
+
+{
+  "nombre": "Julio Cortázar",
+  "nacionalidad": "Argentina"
+}
+
+### Editar un autor
+PUT {{baseUrl}}/api/autores/1
+Content-Type: application/json
+
+{
+  "nombre": "Jorge Luis Borges",
+  "nacionalidad": "Argentina"
+}
+
+### Editar un autor que no existe → 404
+PUT {{baseUrl}}/api/autores/999
+Content-Type: application/json
+
+{
+  "nombre": "No existe",
+  "nacionalidad": "-"
+}
+
+### Borrar un autor
+DELETE {{baseUrl}}/api/autores/11
+
+### Borrar un autor que no existe → 404
+DELETE {{baseUrl}}/api/autores/999
+
+### errores a propósito
+### 400 — sin título
+POST {{baseUrl}}/api/libros
+Content-Type: application/json
+
+{
+  "titulo": "",
+  "precio": 5000,
+  "autorId": 1,
+  "portada": "https://example.com.jpg"
+}
+
+### 400 — el autor no existe (formato válido, dato imposible)
+POST {{baseUrl}}/api/libros
+Content-Type: application/json
+
+{
+  "titulo": "Huérano",
+  "precio": 5000,
+  "autorId": 9999,
+  "portada": "https://example.com.jpg"
+}
+
+### 409 — autor duplicado
+POST {{baseUrl}}/api/autores
+Content-Type: application/json
+
+{
+  "nombre": "Gabriel García Márquez",
+  "nacionalidad": "Colombia"
+}
+
+### 409 — borrar un autor con libros (onDelete: Restrict)
+DELETE {{baseUrl}}/api/autores/1
