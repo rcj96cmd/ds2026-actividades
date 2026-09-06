@@ -7,18 +7,17 @@ datasource db {
   provider = "postgresql"
 }
 
-model Libro {
-  id          Int    @id @default(autoincrement())
-  titulo      String
-  autor       String // por ahora texto, la relación viene en C17
-  descripcion String
-  precio      String
-  portada     String
-}
-
 model Autor {
   id           Int    @id @default(autoincrement())
-  nombre       String @unique
+  nombre       String @unique  
   nacionalidad String
-  bio          String
+}
+
+model Libro {
+  id          Int     @id @default(autoincrement())
+  titulo      String
+  autor       String 
+  descripcion String 
+  precio      Int
+  portada     String  
 }

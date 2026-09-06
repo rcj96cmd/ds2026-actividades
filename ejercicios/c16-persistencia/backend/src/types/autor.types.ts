@@ -1,6 +1,1 @@
-export interface Autor {
-  id: number;
-  nombre: string;
-  nacionalidad: string;
-  bio: string;
-}
+export type { AutorModel as Autor } from "../generated/prisma/models";

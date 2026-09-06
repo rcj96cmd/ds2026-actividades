@@ -6,7 +6,7 @@
 GET {{baseUrl}}/api/libros
 
 ### Ver un libro
-GET {{baseUrl}}/api/libros/0
+GET {{baseUrl}}/api/libros/1
 
 ### Ver un libro que no existe → 404
 GET {{baseUrl}}/api/libros/999
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### Editar un libro
-PUT {{baseUrl}}/api/libros/0
+PUT {{baseUrl}}/api/libros/1
 Content-Type: application/json
 
 {
@@ -59,7 +59,7 @@ DELETE {{baseUrl}}/api/libros/999
 GET {{baseUrl}}/api/autores
 
 ### Ver un autor
-GET {{baseUrl}}/api/autores/0
+GET {{baseUrl}}/api/autores/1
 
 ### Ver un autor que no existe → 404
 GET {{baseUrl}}/api/autores/999
@@ -75,7 +75,7 @@ Content-Type: application/json
 }
 
 ### Editar un autor
-PUT {{baseUrl}}/api/autores/0
+PUT {{baseUrl}}/api/autores/1
 Content-Type: application/json
 
 {
