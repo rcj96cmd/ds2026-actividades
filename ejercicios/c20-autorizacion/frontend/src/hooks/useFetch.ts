@@ -16,7 +16,6 @@ export function useFetch<T>(url: string): UseFetchResult<T> {
     const cargar = async () => {
       try {
         setLoading(true);
-        // ← CAMBIA: usa apiFetch en lugar de fetch directo
         const resultado = await apiFetch<T>(url);
         setData(resultado);
       } catch (e) {

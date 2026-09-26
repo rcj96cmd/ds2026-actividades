@@ -24,12 +24,12 @@ export async function findById(id: number): Promise<UsuarioPublico | null> {
 export async function login(datos: Login): Promise<{ token: string; usuario: UsuarioPublico } | null> {
   const usuario = await prisma.usuario.findUnique({
     where:  { email: datos.email },
-    omit:   { passwordHash: false },        // ← IMPORTANTE: el omit global lo esconde, acá SÍ lo necesito
+    omit:   { passwordHash: false },        
   });
   if (!usuario) return null;
 
   const coincide = await bcrypt.compare(datos.password, usuario.passwordHash);
-  if (!coincide) return null;               // ← Mismo return que arriba (a propósito - evita user enumeration)
+  if (!coincide) return null;               
 
   const payload: PayloadToken = { id: usuario.id, rol: usuario.rol };
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });

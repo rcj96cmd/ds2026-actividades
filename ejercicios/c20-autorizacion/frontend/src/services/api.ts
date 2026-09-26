@@ -38,9 +38,7 @@ export async function apiFetch<T>(
 
   }
 
-  // Verificar status codes y lanzar el mensaje real del backend
   if (!res.ok) {
-    // Para 401 con token → disparar evento de sesión expirada
     if (res.status === 401 && token) {
       window.dispatchEvent(new Event('sesion-expirada'));
     }

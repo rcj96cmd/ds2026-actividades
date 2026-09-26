@@ -1,5 +1,3 @@
-// frontend/src/types/sesionType.ts
-
 export interface Usuario {
   id: number;
   email: string;

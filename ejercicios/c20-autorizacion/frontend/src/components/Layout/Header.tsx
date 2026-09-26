@@ -1,9 +1,22 @@
-import { useState } from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
-import { Link, NavLink } from "react-router-dom";
+import { useState } from 'react';
+import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; 
 
 function Header() {
   const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate();
+  
+  const { usuario, logout } = useAuth(); 
+
+  const manejarSesion = () => {
+    if (usuario) {
+      logout();
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <Navbar
@@ -24,8 +37,20 @@ function Header() {
             <Nav.Link as={NavLink} to="/" end>Inicio</Nav.Link>
             <Nav.Link as={NavLink} to="/catalogo">Catálogo</Nav.Link>
             <Nav.Link as={NavLink} to="/contacto">Contacto</Nav.Link>
-            <Nav.Link as={NavLink} to="/libros/nuevo">Agregar libro</Nav.Link>
           </Nav>
+          
+          {usuario && (
+            <Navbar.Text className="ms-3">
+              Hola, {usuario.nombre}
+            </Navbar.Text>
+          )}
+          
+          <button 
+            className="btn-login ms-3" 
+            onClick={manejarSesion}
+          >
+            {usuario ? 'Salir' : 'Ingresar'}
+          </button>
         </Navbar.Collapse>
       </Container>
     </Navbar>

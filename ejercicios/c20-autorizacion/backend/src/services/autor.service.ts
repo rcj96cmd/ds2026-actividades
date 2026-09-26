@@ -8,7 +8,7 @@ export async function findAll(): Promise<Autor[]> {
 export async function findById(id: number): Promise<Autor | null> {
   return prisma.autor.findUnique({
     where: { id },
-    include: { libros: true }  // O omitir con .omit()
+    include: { libros: true } 
   });
 }
 

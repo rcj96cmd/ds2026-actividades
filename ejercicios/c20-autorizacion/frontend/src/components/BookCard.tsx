@@ -3,7 +3,6 @@ import { Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import type { LibroCardProps } from "../types/libro";
 
-// ← CAMBIA de tipo { Libro } a tipo { LibroCardProps }:
 type BookCardProps = LibroCardProps;
 
 function BookCard({ id, titulo, autor, portada }: BookCardProps) {

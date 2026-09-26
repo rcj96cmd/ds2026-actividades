@@ -2,52 +2,41 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Container, Row, Col, Card, Button, Alert, InputGroup } from "react-bootstrap";
 import { loginSchema } from "../schemas/loginSchema";
-import { apiFetch } from "../services/api";
-import { guardarToken } from "../services/sesion";
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Validación con Zod antes de enviar
-const validateAndSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  const resultado = loginSchema.safeParse({ email, password });
-  
-  if (!resultado.success) {
-    setError(resultado.error.issues[0]?.message || "Error de validación");
-    return;
-  }
-  
-  setError(null);
-  setLoading(true);
+  const handleSesion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const resultado = loginSchema.safeParse({ email, password });
+    
+    if (!resultado.success) {
+      setError(resultado.error.issues[0]?.message || "Error de validación");
+      return;
+    }
+    
+    setError(null);
+    setLoading(true);
 
-  try {
-    // apiFetch ya maneja el token automáticamente si existe
-    const resultadoLogin = await apiFetch<
-      { token: string; usuario: { id: number; email: string; nombre: string; rol: string } }
-    >('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
-    
-    // Guardar el token en localStorage
-    guardarToken(resultadoLogin.token);
-    
-    // Redirigir al catálogo
-    navigate("/catalogo");
-  } catch (e) {
-    const errorMessage = e instanceof Error ? e.message : "Error desconocido";
-    setError(errorMessage);
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      await login({ email, password });
+      
+      navigate("/catalogo");
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Container className="page-section py-5">
@@ -62,7 +51,7 @@ const validateAndSubmit = async (e: React.FormEvent) => {
                 <Alert variant="danger">{error}</Alert>
               )}
               
-              <Form onSubmit={validateAndSubmit}>
+              <Form onSubmit={handleSesion}> 
                 <InputGroup className="mb-3">
                   <Form.Control
                     type="email"
