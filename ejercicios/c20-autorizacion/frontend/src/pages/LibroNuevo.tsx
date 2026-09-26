@@ -1,25 +1,24 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Form, Button, Container } from "react-bootstrap";
 import type { Libro } from "../types/libro";
 import { libroSchema } from "../schemas/libroSchema";
+import { ApiError } from '../services/api';
 
 const PORTADA_PLACEHOLDER = "https://covers.openlibrary.org/b/id/0-M.jpg";
 
-interface Props {
-  onAgregar?: (libro: Libro) => void;
-}
-
-function LibroNuevo({ onAgregar }: Props) {
+function LibroNuevo() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [form, setForm] = useState({
     titulo: "",
-    autor: "",
+    autor: searchParams.get('autor') || "",
     descripcion: "",
     precio: "",
     portada: "",
   });
   const [errores, setErrores] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -28,7 +27,7 @@ function LibroNuevo({ onAgregar }: Props) {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const resultado = libroSchema.safeParse(form);
@@ -44,21 +43,54 @@ function LibroNuevo({ onAgregar }: Props) {
     }
 
     setErrores({});
+    setLoading(true);
 
-    const nuevoLibro: Libro = {
-      id: Date.now(),
-      titulo: resultado.data.titulo,
-      autorId: Number.isFinite(Number(resultado.data.autor))
-        ? Number(resultado.data.autor)
-        : 0,
-      descripcion: resultado.data.descripcion,
-      precio: resultado.data.precio,
-      portada: resultado.data.portada || PORTADA_PLACEHOLDER,
-      disponible: true,
-    };
+    try {
+      const nuevoLibro: Libro = {
+        id: Date.now(),
+        titulo: resultado.data.titulo,
+        autorId: Number.isFinite(Number(resultado.data.autor))
+          ? Number(resultado.data.autor)
+          : 0,
+        descripcion: resultado.data.descripcion,
+        precio: resultado.data.precio,
+        portada: resultado.data.portada || PORTADA_PLACEHOLDER,
+        disponible: true,
+      };
 
-    onAgregar?.(nuevoLibro);
-    navigate("/catalogo");
+      // Simular POST /api/libros (en producción llamarías a la API real)
+      await fetch('/api/libros', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          titulo: nuevoLibro.titulo,
+          autorId: nuevoLibro.autorId,
+          descripcion: nuevoLibro.descripcion,
+          precio: nuevoLibro.precio,
+          portada: nuevoLibro.portada
+        })
+      });
+
+      alert("Libro agregado correctamente");
+      navigate("/catalogo");
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.status === 403) {
+          setErrores({ titulo: "No tienes permiso para agregar libros" });
+        } else if (error.status === 401) {
+          window.location.href = '/login';
+        } else {
+          setErrores({ portada: `Error del servidor (${error.status}): ${error.message}` });
+        }
+      } else {
+        setErrores({ portada: "Error inesperado. Intentá de nuevo." });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -136,8 +168,13 @@ function LibroNuevo({ onAgregar }: Props) {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Button type="submit" className="btn-primary-libreria">
-            Agregar libro
+          <Button 
+            type="submit" 
+            className="btn-primary-libreria"
+            variant="primary"
+            disabled={loading}
+          >
+            {loading ? "Procesando..." : "Agregar libro"}
           </Button>
         </Form>
       </Container>

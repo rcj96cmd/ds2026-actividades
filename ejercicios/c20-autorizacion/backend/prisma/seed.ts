@@ -3,29 +3,29 @@ import { prisma } from "../src/config/prisma";
 
 
 const autoresData = [
-  { nombre: "Antoine de Saint-Exupéry", nacionalidad: "Francia" },
   { nombre: "Gabriel García Márquez", nacionalidad: "Colombia" },
-  { nombre: "Alexander Shvets", nacionalidad: "Ucrania" },
-  { nombre: "Ray Bradbury", nacionalidad: "Estados Unidos" },
+  { nombre: "Jorge Luis Borges", nacionalidad: "Argentina" },
+  { nombre: "Miguel de Cervantes", nacionalidad: "España" },
   { nombre: "George Orwell", nacionalidad: "Reino Unido" },
+  { nombre: "Antoine de Saint-Exupéry", nacionalidad: "Francia" },
+  { nombre: "Julio Cortázar", nacionalidad: "Argentina" },
+  { nombre: "Ray Bradbury", nacionalidad: "Estados Unidos" },
   { nombre: "Paulo Coelho", nacionalidad: "Brasil" },
-  { nombre: "Yuval Noah Harari", nacionalidad: "Israel" },
-  { nombre: "Dan Brown", nacionalidad: "Estados Unidos" },
   { nombre: "Harper Lee", nacionalidad: "Estados Unidos" },
   { nombre: "Carlos Ruiz Zafón", nacionalidad: "España" }
 ];
 
 const librosData = [
-  { titulo: "El principito", descripcion: "Un piloto en el desierto encuentra un pequeño príncipe de otro mundo.", precio: 4500, portada: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80", autorId: 1 },
-  { titulo: "Patrones de diseño", descripcion: "Colección de soluciones recurrentes a problemas comunes de software.", precio: 8500, portada: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&q=80", autorId: 3 },
-  { titulo: "Fahrenheit 451", descripcion: "En un futuro distópico, los bomberos se encargan de quemar libros.", precio: 5200, portada: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=400&q=80", autorId: 4 },
-  { titulo: "Cien años de soledad", descripcion: "Una de las obras más importantes de la literatura universal.", precio: 6200, portada: "https://images.unsplash.com/photo-1473187983305-f615310e7daa?auto=format&fit=crop&w=400&q=80", autorId: 2 },
-  { titulo: "1984", descripcion: "Un clásico de la literatura distópica sobre el totalitarismo.", precio: 3500, portada: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80", autorId: 5 },
-  { titulo: "El alquimista", descripcion: "Un novelista y sus libros", precio: 4100, portada: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80", autorId: 6 },
-  { titulo: "Sapiens: De animales a dioses", descripcion: "La historia de la humanidad según Yuval Noah Harari.", precio: 7800, portada: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80", autorId: 7 },
-  { titulo: "El código Da Vinci", descripcion: "Teorías conspirativas sobre historia del arte y religión.", precio: 5100, portada: "https://images.unsplash.com/photo-1496104679561-38b73d6fcdf0?auto=format&fit=crop&w=400&q=80", autorId: 8 },
-  { titulo: "Matar a un ruiseñor", descripcion: "Un abogado defiende a un negro acusado de atacar a un blanco.", precio: 4700, portada: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=400&q=80", autorId: 9 },
-  { titulo: "La sombra del viento", descripcion: "Un libro misterioso en una Barcelona de los años 40.", precio: 6900, portada: "https://images.unsplash.com/photo-1529480821492-a27f2b0b4b79?auto=format&fit=crop&w=400&q=80", autorId: 10 }
+  { titulo: "Cien años de soledad", descripcion: "Una de las obras más importantes de la literatura latinoamericana. Narra la historia de la familia Buendía a lo largo de siete generaciones en el pueblo ficticio de Macondo, entrelazando realidad y fantasía en lo que se conoce como realismo mágico.", precio: 4500, portada: "https://covers.openlibrary.org/b/id/15219095-M.jpg", autorId: 1 },
+  { titulo: "El Aleph", descripcion: "Una colección de cuentos que explora el infinito, el tiempo y la identidad. El cuento central narra el descubrimiento de un punto en el espacio desde el cual se pueden ver todos los lugares del universo al mismo tiempo.", precio: 3200, portada: "https://covers.openlibrary.org/b/id/14826417-M.jpg", autorId: 2 },
+  { titulo: "Don Quijote de la Mancha", descripcion: "Considerada la primera novela moderna de la literatura occidental. Sigue las aventuras de Alonso Quijano, un hidalgo que enloquece leyendo libros de caballería y decide convertirse en caballero andante junto a su fiel escudero Sancho Panza.", precio: 5000, portada: "https://covers.openlibrary.org/b/id/15119548-M.jpg", autorId: 3 },
+  { titulo: "1984", descripcion: "Una distopía ambientada en un futuro totalitario donde el gobierno controla cada aspecto de la vida de los ciudadanos. Winston Smith trabaja reescribiendo la historia para el Partido y comienza a cuestionar en secreto el sistema que lo oprime.", precio: 3800, portada: "https://covers.openlibrary.org/b/id/15158861-M.jpg", autorId: 4 },
+  { titulo: "El principito", descripcion: "Un aviador que cae en el desierto conoce a un pequeño príncipe llegado de otro planeta. A través de sus viajes por distintos mundos, la historia reflexiona sobre la amistad, el amor y lo esencial de la vida.", precio: 2900, portada: "https://covers.openlibrary.org/b/id/14851577-M.jpg", autorId: 5 },
+  { titulo: "Rayuela", descripcion: "Una novela experimental que puede leerse en distintos órdenes según las instrucciones del autor. Sigue a Horacio Oliveira, un argentino en París que busca el sentido de la existencia entre el arte, el amor y la filosofía.", precio: 4100, portada: "https://covers.openlibrary.org/b/id/15103307-M.jpg", autorId: 6 },
+  { titulo: "Fahrenheit 451", descripcion: "En una sociedad distópica donde los libros están prohibidos, Guy Montag es un bombero cuya tarea es quemarlos. Su encuentro con una joven vecina lo lleva a cuestionar su trabajo y a descubrir el valor oculto del conocimiento y la lectura.", precio: 5200, portada: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=400&q=80", autorId: 7 },
+  { titulo: "El alquimista", descripcion: "Santiago, un joven pastor andaluz, emprende un viaje hacia las pirámides de Egipto en busca de un tesoro anunciado en un sueño recurrente. En el camino descubre que el verdadero tesoro está en el propio viaje y en escuchar los signos del universo.", precio: 4100, portada: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80", autorId: 8 },
+  { titulo: "Matar a un ruiseñor", descripcion: "En un pueblo del sur de Estados Unidos durante la Gran Depresión, el abogado Atticus Finch decide defender a un hombre acusado injustamente. La historia, narrada por su hija Scout, aborda el racismo, la injusticia y la pérdida de la inocencia.", precio: 4700, portada: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=400&q=80", autorId: 9 },
+  { titulo: "La sombra del viento", descripcion: "En la Barcelona de posguerra, un joven descubre en el Cementerio de los Libros Olvidados una novela que cambiará su destino. A medida que investiga al misterioso autor del libro, se adentra en una trama de amor, venganza y secretos ocultos.", precio: 6900, portada: "https://images.unsplash.com/photo-1529480821492-a27f2b0b4b79?auto=format&fit=crop&w=400&q=80", autorId: 10 }
 ];
 
 const usuarios = [

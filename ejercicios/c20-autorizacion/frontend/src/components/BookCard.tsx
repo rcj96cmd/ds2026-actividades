@@ -16,7 +16,7 @@ function BookCard({ id, titulo, autor, portada }: BookCardProps) {
       </div>
       <Card.Body className="d-flex flex-column">
         <Card.Title className="book-card-title">{titulo}</Card.Title>
-        <Card.Text className="book-card-author">{autor.nombre}</Card.Text>  // ← Ya usás autor.nombre, está bien
+        <Card.Text className="book-card-author">{autor.nombre}</Card.Text>
         <div className="mt-auto d-flex gap-2">
           <Button
             as={Link as any}

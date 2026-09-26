@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Form, Container, Row, Col, Card, Button, Alert, InputGroup } from "react-bootstrap";
 import { loginSchema } from "../schemas/loginSchema";
 import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Obtener la página original donde estaba antes del login
+  const fromPathname = location.state?.desde || '/catalogo';
 
   const handleSesion = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,20 +35,8 @@ function Login() {
       // Intentar login con el backend
       await login({ email, password });
       
-      // Login exitoso - redirigir según rol
-      if (typeof window !== 'undefined') {
-        const storedUsuario = localStorage.getItem('usuario');
-        if (storedUsuario) {
-          const usuario = JSON.parse(storedUsuario);
-          if (usuario.rol === 'ADMIN') {
-            navigate("/catalogo", { state: { from: { pathname: '/catalogo' } } });
-          } else {
-            navigate("/catalogo", { state: { from: { pathname: '/catalogo' } } });
-          }
-        } else {
-          navigate("/catalogo");
-        }
-      }
+      // Redirigir a la página original (o /catalogo por defecto)
+      navigate(fromPathname, { replace: true });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error desconocido";
       
@@ -107,8 +99,8 @@ function Login() {
               
               <div className="text-center mt-3">
                 <small className="text-muted">
-                  <strong>Admin:</strong> admin@libreria.test / Admin1234<br />
-                  <strong>Cliente:</strong> cliente@libreria.test / Cliente1234
+                  Admin: admin@libreria.test / Admin1234<br />
+                  Cliente: cliente@libreria.test / Cliente1234
                 </small>
               </div>
             </Card.Body>
