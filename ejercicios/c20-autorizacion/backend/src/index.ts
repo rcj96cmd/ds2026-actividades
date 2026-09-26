@@ -9,9 +9,8 @@ import { errorHandler } from "./middlewares/error.middleware";
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
-// ✅ CORS habilitado para desarrollo con wildcard
 app.use(cors({
-  origin: "*",  // Para desarrollo local, permite todos los orígenes
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true

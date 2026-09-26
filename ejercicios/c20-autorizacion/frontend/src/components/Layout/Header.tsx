@@ -7,7 +7,7 @@ function Header() {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
   
-  const { usuario, logout } = useAuth(); 
+  const { usuario, logout, estaAutenticado } = useAuth(); 
 
   const manejarSesion = () => {
     if (usuario) {
@@ -37,6 +37,15 @@ function Header() {
             <Nav.Link as={NavLink} to="/" end>Inicio</Nav.Link>
             <Nav.Link as={NavLink} to="/catalogo">Catálogo</Nav.Link>
             <Nav.Link as={NavLink} to="/contacto">Contacto</Nav.Link>
+            {estaAutenticado && usuario?.rol === 'ADMIN' && (
+              <Nav.Link 
+                as={NavLink} 
+                to="/libros/nuevo"
+                style={{ marginLeft: '10px', color: '#f0ad4e' }}
+              >
+                Agregar libro
+              </Nav.Link>
+            )}
           </Nav>
           
           {usuario && (

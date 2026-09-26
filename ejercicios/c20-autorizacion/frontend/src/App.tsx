@@ -7,7 +7,9 @@ import Contacto from "./pages/Contacto";
 import LibroDetalle from "./pages/LibroDetalle";
 import LibroNuevo from "./pages/LibroNuevo";
 import Login from "./pages/Login";
+import SinPermiso from "./pages/SinPermiso";
 
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -19,7 +21,15 @@ function App() {
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/libros/:id" element={<LibroDetalle />} />
-          <Route path="/libros/nuevo" element={<LibroNuevo />} />
+          <Route 
+            path="/libros/nuevo" 
+            element={
+              <PrivateRoute rol="ADMIN">
+                <LibroNuevo />
+              </PrivateRoute>
+            } 
+          />
+          <Route path="/sin-permiso" element={<SinPermiso />} />
         </Routes>
       </Layout>
     </AuthProvider>
