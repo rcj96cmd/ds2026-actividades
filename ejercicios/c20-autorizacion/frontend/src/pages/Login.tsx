@@ -16,6 +16,7 @@ function Login() {
   const handleSesion = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validar con Zod schema
     const resultado = loginSchema.safeParse({ email, password });
     
     if (!resultado.success) {
@@ -27,12 +28,34 @@ function Login() {
     setLoading(true);
 
     try {
+      // Intentar login con el backend
       await login({ email, password });
       
-      navigate("/catalogo");
+      // Login exitoso - redirigir según rol
+      if (typeof window !== 'undefined') {
+        const storedUsuario = localStorage.getItem('usuario');
+        if (storedUsuario) {
+          const usuario = JSON.parse(storedUsuario);
+          if (usuario.rol === 'ADMIN') {
+            navigate("/catalogo", { state: { from: { pathname: '/catalogo' } } });
+          } else {
+            navigate("/catalogo", { state: { from: { pathname: '/catalogo' } } });
+          }
+        } else {
+          navigate("/catalogo");
+        }
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error desconocido";
-      setError(errorMessage);
+      
+      // Mensajes de error específicos según el código de error del backend
+      if (errorMessage.includes("401") || errorMessage === "Credenciales inválidas") {
+        setError("Email o contraseña incorrectos");
+      } else if (errorMessage.includes("403")) {
+        setError("No tienes permiso para realizar esta operación");
+      } else {
+        setError("Error al conectar con el servidor. Intentá de nuevo.");
+      }
     } finally {
       setLoading(false);
     }
@@ -84,8 +107,8 @@ function Login() {
               
               <div className="text-center mt-3">
                 <small className="text-muted">
-                  Admin: admin@libreria.test / Admin1234<br />
-                  Cliente: cliente@libreria.test / Cliente1234
+                  <strong>Admin:</strong> admin@libreria.test / Admin1234<br />
+                  <strong>Cliente:</strong> cliente@libreria.test / Cliente1234
                 </small>
               </div>
             </Card.Body>
