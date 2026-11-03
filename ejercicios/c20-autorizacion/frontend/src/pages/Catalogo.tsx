@@ -5,7 +5,7 @@ import { useFetch } from "../hooks/useFetch";
 import type { Libro } from "../types/libro";
 
 function Catalogo() {
-  const { data: libros, loading, error } = useFetch<Libro[]>("/libros");
+  const { data: libros, loading, error, recargar } = useFetch<Libro[]>("/libros");
 
   const [busqueda, setBusqueda] = useState("");
   const [query, setQuery] = useState("");
@@ -42,7 +42,7 @@ function Catalogo() {
     ? (libros ?? []).filter(
         (l) =>
           l.titulo.toLowerCase().includes(query) ||
-          (l.autor?.nombre ?? "").toLowerCase().includes(query)
+          l.autor.nombre.toLowerCase().includes(query)
       )
     : libros ?? [];
 
@@ -85,12 +85,10 @@ function Catalogo() {
               <BookCard
                 id={libro.id}
                 titulo={libro.titulo}
-                autor={
-                  libro.autor ??
-                  ({ id: 0, nombre: "Autor", nacionalidad: "Desconocida" } as any)
-                }
+                autor={libro.autor}
                 portada={libro.portada}
                 disponible={libro.disponible}
+                onBorrado={recargar}
               />
             </Col>
           ))}

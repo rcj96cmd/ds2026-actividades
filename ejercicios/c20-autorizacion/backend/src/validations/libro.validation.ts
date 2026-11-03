@@ -4,7 +4,7 @@ import { z } from "zod";
 export const libroCreateSchema = z.object({
   titulo: z.string().trim().min(1, "El título es obligatorio").max(200),
   autorId: z.number().int().positive("El autor debe existir"),
-  descripcion: z.string().optional(),
+  descripcion: z.string().trim().min(1, "La descripción es obligatoria"),
   precio: z.number().int().positive("El precio debe ser mayor a 0"),
   portada: z.string().min(1, "La imagen es obligatoria"),
 });

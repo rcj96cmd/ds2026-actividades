@@ -1,4 +1,4 @@
-interface Autor {
+export interface Autor {
   id: number;
   nombre: string;
   nacionalidad: string;
@@ -12,13 +12,22 @@ export interface Libro {
   precio: number;       
   portada: string;
   disponible: boolean;
-  autor?: Autor;        
+  autor: Autor;
+}
+
+export interface LibroDatos {
+  titulo: string;
+  autorId: number;
+  descripcion: string;
+  precio: number;
+  portada: string;
 }
 
 export interface LibroCardProps {
   id: number;
   titulo: string;
-  autor: Autor;         
+  autor: Autor;
   portada: string;
   disponible: boolean;
+  onBorrado: () => void;
 }

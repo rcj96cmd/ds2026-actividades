@@ -1,14 +1,8 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import type { ReactNode } from "react";
 import { Spinner } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 
-interface PrivateRouteProps {
-  children?: ReactNode;
-  rol?: string;
-}
-
-function PrivateRoute({ children, rol }: PrivateRouteProps) {
+function PrivateRoute({ rol }: { rol?: string }) {
   const { usuario, cargando } = useAuth();
   const location = useLocation();
 
@@ -21,10 +15,9 @@ function PrivateRoute({ children, rol }: PrivateRouteProps) {
     );
   }
 
-  // Si no hay usuario autenticado, redirigir a login
+  // Si no hay usuario autenticado, redirigir a login recordando la página de origen
   if (!usuario) {
-    const from = location.state?.from?.pathname || "/catalogo";
-    return <Navigate to="/login" state={{ from }} replace />;
+    return <Navigate to="/login" state={{ desde: location.pathname }} replace />;
   }
 
   // Si se requiere un rol específico y el usuario no lo tiene, mostrar sin-permiso
@@ -32,13 +25,8 @@ function PrivateRoute({ children, rol }: PrivateRouteProps) {
     return <Navigate to="/sin-permiso" replace />;
   }
 
-  // Autorizado - usar Outlet para layout route o renderizar children si es componente inline
-  return (
-    <>
-      {children}
-      <Outlet />
-    </>
-  );
+  // Autorizado: la ruta hija se renderiza en el Outlet
+  return <Outlet />;
 }
 
 export default PrivateRoute;

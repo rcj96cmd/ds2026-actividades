@@ -2,7 +2,7 @@ import { Autor } from "../types/autor.types";
 import { prisma } from "../config/prisma";
 
 export async function findAll(): Promise<Autor[]> {
-  return prisma.autor.findMany();
+  return prisma.autor.findMany({ orderBy: { nombre: "asc" } });
 }
 
 export async function findById(id: number): Promise<Autor | null> {

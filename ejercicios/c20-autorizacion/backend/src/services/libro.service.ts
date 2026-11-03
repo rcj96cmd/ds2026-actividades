@@ -1,5 +1,7 @@
 import { prisma } from "../config/prisma";
 import { Prisma } from "../generated/prisma/client";
+import type { Libro } from "../types/libro.types";
+import { ErrorHttp } from "../errors/ErrorHttp";
 
 export type LibroConAutor = Prisma.LibroGetPayload<{ include: { autor: true } }>;
 
@@ -9,7 +11,8 @@ export async function findAll(): Promise<Libro[]> {
 
 export async function findAllWithAuthor(): Promise<LibroConAutor[]> {
   return prisma.libro.findMany({
-    include: { autor: true }
+    include: { autor: true },
+    orderBy: { id: "asc" }
   });
 }
 
@@ -24,10 +27,10 @@ export async function findByIdWithAuthor(id: number): Promise<LibroConAutor | nu
   });
 }
 
-export async function create(datos: { titulo: string; autorId: number; descripcion?: string; precio: number; portada: string }): Promise<Libro> {
+export async function create(datos: { titulo: string; autorId: number; descripcion: string; precio: number; portada: string }): Promise<Libro> {
   const autorExists = await prisma.autor.findUnique({ where: { id: datos.autorId } });
   if (!autorExists) {
-    throw new Error(`El autor con ID ${datos.autorId} no existe`);
+    throw new ErrorHttp(400, `El autor con ID ${datos.autorId} no existe`);
   }
   return prisma.libro.create({ data: datos, include: { autor: true } });
 }
@@ -39,7 +42,7 @@ export async function update(id: number, datos: { titulo?: string; autorId?: num
   if (datos.autorId !== undefined) {
     const autorExists = await prisma.autor.findUnique({ where: { id: datos.autorId } });
     if (!autorExists) {
-      throw new Error(`El autor con ID ${datos.autorId} no existe`);
+      throw new ErrorHttp(400, `El autor con ID ${datos.autorId} no existe`);
     }
   }
   

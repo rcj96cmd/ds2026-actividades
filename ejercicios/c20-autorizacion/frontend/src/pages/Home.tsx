@@ -1,10 +1,15 @@
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import libreriaImg from "../assets/libreria.jpg";
 import BookCard from "../components/BookCard";
-import { libros } from "../data/libros";
+import { useFetch } from "../hooks/useFetch";
+import type { Libro } from "../types/libro";
+
+const LIBROS_DESTACADOS = 6;
 
 function Home() {
+  const { data: libros, loading, error, recargar } = useFetch<Libro[]>("/libros");
+
   return (
     <>
       <section
@@ -21,9 +26,9 @@ function Home() {
           <p className="hero-subtitle">
             Descubrí tu próxima lectura favorita entre cientos de títulos cuidadosamente seleccionados.
           </p>
-          <Button as={Link as any} to="/catalogo" className="btn-accent">
+          <Link to="/catalogo" className="btn btn-accent">
             Ver catálogo
-          </Button>
+          </Link>
         </Container>
       </section>
 
@@ -31,15 +36,22 @@ function Home() {
         <Container>
           <h2 className="section-title">Libros destacados</h2>
           <p className="section-subtitle">Explorá nuestra colección de títulos destacados.</p>
+          {loading && (
+            <div className="text-center py-5">
+              <Spinner animation="border" />
+            </div>
+          )}
+          {error && <Alert variant="danger">{error}</Alert>}
           <Row xs={1} sm={2} md={3} className="g-4">
-            {libros.map((libro) => (
+            {(libros ?? []).slice(0, LIBROS_DESTACADOS).map((libro) => (
               <Col key={libro.id}>
                 <BookCard 
                   id={libro.id}
                   titulo={libro.titulo}
-                  autor={libro.autor!} 
+                  autor={libro.autor}
                   portada={libro.portada}
                   disponible={libro.disponible}
+                  onBorrado={recargar}
                   />
               </Col>
             ))}

@@ -1,18 +1,27 @@
-import { Container, Button } from "react-bootstrap";
+import { Container, Button, Spinner } from "react-bootstrap";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { libros } from "../data/libros";
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
+import { useFetch } from "../hooks/useFetch";
+import { apiFetch } from "../services/api";
+import type { Libro } from "../types/libro";
 
 function LibroDetalle() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { usuario, tieneRol } = useAuth();
-  
+
   const [loading, setLoading] = useState(false);
 
-  // Obtener el libro por ID desde localStorage (ya que libros viene de ahí)
-  const libro = libros.find((l) => l.id === Number(id));
+  const { data: libro, loading: cargando } = useFetch<Libro>(`/libros/${id}`);
+
+  if (cargando) {
+    return (
+      <Container className="text-center py-5">
+        <Spinner animation="border" />
+      </Container>
+    );
+  }
 
   if (!libro) {
     return (
@@ -31,15 +40,8 @@ function LibroDetalle() {
       setLoading(true);
       
       try {
-        // Simular llamada al backend DELETE /api/libros/${id}
-        await fetch(`/api/libros/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        
+        await apiFetch(`/libros/${id}`, { method: 'DELETE' });
+
         alert("Libro eliminado correctamente");
         navigate('/catalogo');
       } catch (error) {
@@ -65,7 +67,7 @@ function LibroDetalle() {
           
           <div className="col-md-8">
             <h1 className="libro-detalle-titulo">{libro.titulo}</h1>
-            <h5 className="libro-detalle-autor">{libro.autor?.nombre ?? "Sin autor"}</h5>
+            <h5 className="libro-detalle-autor">{libro.autor.nombre}</h5>
             <p className="libro-detalle-descripcion">{libro.descripcion}</p>
             <p className="libro-detalle-precio">
               Precio: <span style={{ color: "var(--color-primary)" }}>{libro.precio}</span>
@@ -79,7 +81,7 @@ function LibroDetalle() {
                 <>
                   <Button 
                     variant="outline-primary"
-                    onClick={() => navigate(`/libros/nuevo?editar=${id}`)}
+                    onClick={() => navigate(`/libros/${id}/editar`)}
                   >
                     Editar
                   </Button>

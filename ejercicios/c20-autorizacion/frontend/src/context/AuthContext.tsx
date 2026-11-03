@@ -10,7 +10,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 // Provider que envuelve todo
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
-  const [cargando, setCargando] = useState(true);
+  const [cargando, setCargando] = useState(obtenerToken() !== null);
   
   // Calculados para facilitar el uso
   const estaAutenticado = usuario !== null;
@@ -20,90 +20,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Función login
   const login = async (credenciales: Credenciales) => {
-    try {
+    const resultado = await apiFetch<{
+      token: string;
+      usuario: Usuario;
+    }>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(credenciales),
+    });
 
-      const resultado = await apiFetch<{
-        token: string;
-        usuario: Usuario;
-      }>('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify(credenciales),
-      });
-      
-      guardarToken(resultado.token);
-      setUsuario(resultado.usuario);
-    } catch (error) {
-      // Manejo específico de errores comunes
-      if (error instanceof Error) {
-        const errorMessage = error.message;
-        
-        // Si el error tiene código de estado, usarlo para mostrar mensaje específico
-        if (errorMessage.includes('401')) {
-          console.warn('Error 401: Credenciales incorrectas');
-        } else if (errorMessage.includes('403')) {
-          console.warn('Error 403: Permiso denegado');
-        }
-      }
-      
-      throw error;
-    }
+    guardarToken(resultado.token);
+    setUsuario(resultado.usuario);
   };
 
   const logout = () => {
     borrarToken();
+    setUsuario(null);
   };
 
-
   useEffect(() => {
-    const verificarSesion = async () => {
-      const token = await obtenerToken();
-      
-      if (!token) {
-        setCargando(false);
-        return;
-      }
-      
-      try {
-        const respuesta = await apiFetch<Usuario>('/auth/yo');
-        
-        setUsuario(respuesta);
-      } catch (error) {
-        console.error('Error de autenticación:', error);
-        borrarToken();
-        
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
-      } finally {
-        setCargando(false);
-      }
-    };
-    
-    verificarSesion();
+    if (!obtenerToken()) return;
+
+    apiFetch<Usuario>('/auth/yo')
+      .then(setUsuario)
+      .catch(() => borrarToken())
+      .finally(() => setCargando(false));
   }, []);
 
   useEffect(() => {
-    const handleSessionExpired = () => {
-      console.log('Evento sesión-expirada recibido');
-      
-      borrarToken();
-      setUsuario(null);
-      setCargando(false);
-      
-      // Redirigir a login si no hay usuario
-      if (!usuario) {
-        window.location.href = '/login';
-      }
-    };
+    // Escuchar el evento que dispara apiFetch ante un 401 con token
+    window.addEventListener('sesion-expirada', logout);
 
-    // Escuchar el evento globalmente
-    window.addEventListener('sesión-expirada', handleSessionExpired);
-    
     // Limpiar listener al desmontar
     return () => {
-      window.removeEventListener('sesión-expirada', handleSessionExpired);
+      window.removeEventListener('sesion-expirada', logout);
     };
-  }, [usuario]);
+  }, []);
 
   const valor = {
     usuario,
@@ -121,14 +72,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// La actividad pide el hook en este archivo. La regla solo afecta al hot reload de Vite
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const contexto = useContext(AuthContext);
-  
+
   if (!contexto) {
     throw new Error('useAuth debe usarse dentro de AuthProvider');
   }
-  
+
   return contexto;
 }
-
-export default AuthContext;

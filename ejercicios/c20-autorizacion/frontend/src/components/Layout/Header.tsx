@@ -7,7 +7,7 @@ function Header() {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
   
-  const { usuario, logout, estaAutenticado } = useAuth(); 
+  const { usuario, logout, tieneRol } = useAuth();
 
   const manejarSesion = () => {
     if (usuario) {
@@ -38,14 +38,14 @@ function Header() {
             <Nav.Link as={NavLink} to="/catalogo">Catálogo</Nav.Link>
             <Nav.Link as={NavLink} to="/contacto">Contacto</Nav.Link>
             
-            {/* ⬅️ EXTENSIÓN #3: Botón "Agregar libro" solo visible para ADMIN */}
-            {estaAutenticado && usuario?.rol === 'ADMIN' && (
-              <Nav.Link 
-                as={NavLink} 
+            {/* Link "Nuevo libro" solo visible para ADMIN */}
+            {tieneRol('ADMIN') && (
+              <Nav.Link
+                as={NavLink}
                 to="/libros/nuevo"
                 style={{ marginLeft: '10px', color: '#f0ad4e' }}
               >
-                Agregar libro
+                Nuevo libro
               </Nav.Link>
             )}
           </Nav>
@@ -57,7 +57,6 @@ function Header() {
                 id="user-dropdown"
                 align="end"
               >
-                <NavDropdown.Divider />
                 <NavDropdown.Item onClick={manejarSesion}>
                   Salir
                 </NavDropdown.Item>

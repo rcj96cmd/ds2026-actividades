@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as libroService from "../services/libro.service";
 
 export async function getAll(req: Request, res: Response) {
-  const libros = await libroService.findAll();
+  const libros = await libroService.findAllWithAuthor();
   return res.json(libros);
 }
 

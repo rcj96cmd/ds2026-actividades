@@ -1,6 +1,13 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 import { ZodError } from "zod";
 import { Prisma } from "../generated/prisma/client";
+import { ErrorHttp } from "../errors/ErrorHttp";
+
+// Express 4 no captura los errores de funciones async: hay que pasarlos a next()
+export const asyncHandler = (handler: RequestHandler): RequestHandler =>
+  (req, res, next) => {
+    Promise.resolve(handler(req, res, next)).catch(next);
+  };
 
 export const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   
@@ -34,7 +41,12 @@ export const errorHandler = (err: unknown, _req: Request, res: Response, _next: 
     }
   }
   
-  // 3. Captura errores desconocidos
+  // 3. Captura errores de negocio lanzados por los services
+  if (err instanceof ErrorHttp) {
+    return res.status(err.status).json({ error: err.message });
+  }
+
+  // 4. Captura errores desconocidos
   console.error('Unknown Error:', err);
   return res.status(500).json({ error: "Error interno del servidor" });
 };

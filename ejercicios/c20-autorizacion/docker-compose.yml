@@ -6,6 +6,7 @@ services:
       - "5555:5555"
     volumes:
       - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
       - ./backend/prisma.config.ts:/app/prisma.config.ts
     env_file:
       - backend/.env
@@ -17,6 +18,9 @@ services:
     build: ./frontend
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/vite.config.ts:/app/vite.config.ts
     env_file:
       - frontend/.env
 

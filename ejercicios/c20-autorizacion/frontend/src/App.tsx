@@ -6,6 +6,7 @@ import Catalogo from "./pages/Catalogo";
 import Contacto from "./pages/Contacto";
 import LibroDetalle from "./pages/LibroDetalle";
 import LibroNuevo from "./pages/LibroNuevo";
+import LibroEditar from "./pages/LibroEditar";
 import Login from "./pages/Login";
 import SinPermiso from "./pages/SinPermiso";
 
@@ -21,15 +22,11 @@ function App() {
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/libros/:id" element={<LibroDetalle />} />
-          <Route 
-            path="/libros/nuevo" 
-            element={
-              <PrivateRoute rol="ADMIN">
-                <LibroNuevo />
-              </PrivateRoute>
-            } 
-          />
           <Route path="/sin-permiso" element={<SinPermiso />} />
+          <Route element={<PrivateRoute rol="ADMIN" />}>
+            <Route path="/libros/nuevo" element={<LibroNuevo />} />
+            <Route path="/libros/:id/editar" element={<LibroEditar />} />
+          </Route>
         </Routes>
       </Layout>
     </AuthProvider>

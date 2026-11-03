@@ -15,7 +15,7 @@ export async function apiFetch<T>(
   ruta: string, 
   opciones: RequestInit = {}
 ): Promise<T> {
-  const token = await obtenerToken();
+  const token = obtenerToken();
   
   const headersWithAuth = token 
     ? { 
@@ -30,23 +30,24 @@ export async function apiFetch<T>(
     headers: headersWithAuth 
   });
 
-  let cuerpo: any = null;
-  
+  let cuerpo: unknown = null;
+
   try {
     cuerpo = await res.json();
-  } catch (e) {
-
+  } catch {
+    // La respuesta no trae JSON (por ejemplo, un 204 al borrar)
   }
 
   if (!res.ok) {
     if (res.status === 401 && token) {
       window.dispatchEvent(new Event('sesion-expirada'));
     }
-    
-    throw new ApiError(res.status, cuerpo?.error ?? `Error ${res.status}`);
+
+    const mensaje = (cuerpo as { error?: string } | null)?.error;
+    throw new ApiError(res.status, mensaje ?? `Error ${res.status}`);
   }
 
   return cuerpo as T;
 }
 
-export { ApiError, obtenerToken };
+export { ApiError };

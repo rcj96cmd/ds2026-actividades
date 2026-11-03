@@ -2,17 +2,16 @@ import type { Usuario } from '../types/sesionType';
 
 const TOKEN_KEY = "token";
 
-export async function guardarToken(token: string): Promise<void> {
+export function guardarToken(token: string): void {
   localStorage.setItem(TOKEN_KEY, token);
 }
 
-export async function obtenerToken(): Promise<string | null> {
+export function obtenerToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
 
-export async function borrarToken(): Promise<void> {
+export function borrarToken(): void {
   localStorage.removeItem(TOKEN_KEY);
-  location.reload();
 }
 
 export interface AuthData {
