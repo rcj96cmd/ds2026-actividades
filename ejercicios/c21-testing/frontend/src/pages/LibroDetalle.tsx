@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 import { useFetch } from "../hooks/useFetch";
 import { apiFetch } from "../services/api";
+import { formatearPrecio } from "../utils/formatearPrecio";
 import type { Libro } from "../types/libro";
 
 function LibroDetalle() {
@@ -70,7 +71,7 @@ function LibroDetalle() {
             <h5 className="libro-detalle-autor">{libro.autor.nombre}</h5>
             <p className="libro-detalle-descripcion">{libro.descripcion}</p>
             <p className="libro-detalle-precio">
-              Precio: <span style={{ color: "var(--color-primary)" }}>{libro.precio}</span>
+              Precio: <span style={{ color: "var(--color-primary)" }}>{formatearPrecio(libro.precio)}</span>
             </p>
             
             <div className="d-flex gap-3 mb-4">
