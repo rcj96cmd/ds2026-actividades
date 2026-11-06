@@ -12,5 +12,9 @@ export default defineConfig({
       JWT_SECRET: "secreto-solo-para-tests",
       DATABASE_URL: databaseUrl,
     },
+    coverage: {
+      exclude: ["src/generated/**"],
+      clean: false,
+    },
   },
 });

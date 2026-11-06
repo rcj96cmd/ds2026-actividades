@@ -3,7 +3,7 @@ import request from "supertest";
 import app from "../app";
 import { prisma } from "../config/prisma";
 
-
+// Usa la base de datos: requiere docker compose up -d db y el seed cargado
 afterAll(() => prisma.$disconnect());
 
 describe("POST /api/auth/login", () => {
