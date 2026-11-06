@@ -18,6 +18,7 @@ CREATE TABLE "Libro" (
     "descripcion" TEXT NOT NULL,
     "precio" INTEGER NOT NULL,
     "portada" TEXT NOT NULL DEFAULT 'https://via.placeholder.com/400',
+    "disponible" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Libro_pkey" PRIMARY KEY ("id")
 );
