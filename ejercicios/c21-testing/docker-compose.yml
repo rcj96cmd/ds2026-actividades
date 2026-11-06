@@ -8,6 +8,7 @@ services:
       - ./backend/src:/app/src
       - ./backend/prisma:/app/prisma
       - ./backend/prisma.config.ts:/app/prisma.config.ts
+      - ./backend/vitest.config.mts:/app/vitest.config.mts
     env_file:
       - backend/.env
     depends_on:
