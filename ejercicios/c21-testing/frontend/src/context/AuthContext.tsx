@@ -4,8 +4,7 @@ import { apiFetch } from '../services/api';
 import type { Usuario, Credenciales, AuthContextType } from '../types/sesionType';
 import { guardarToken, borrarToken, obtenerToken } from '../services/sesion';
 
-// Creamos el tipo del contexto (nulo o AuthContextType)
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 // Provider que envuelve todo
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -72,8 +71,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// La actividad pide el hook en este archivo. La regla solo afecta al hot reload de Vite
-// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const contexto = useContext(AuthContext);
 
